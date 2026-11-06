@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite';
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  base: './',
+  base: "./",
   build: { chunkSizeWarningLimit: 750 },
-  server: { port: 5173, strictPort: true }
+  server: { port: 5173, strictPort: true },
 });

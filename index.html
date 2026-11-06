@@ -1,55 +1,534 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#047857">
-  <meta name="description" content="Build a skills profile, explore opportunities, and review a match with Connect onAir.">
-  <title>Connect onAir | Profiles & Opportunities</title>
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/src/styles.css">
-  <script type="module" src="/src/app.js"></script>
-</head>
-<body>
-  <a class="skip-link" href="#main">Skip to main content</a>
-  <header class="site-header"><div class="header-inner">
-    <a href="#profile" class="brand" aria-label="Connect onAir home"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="rainbow" x2="1" y2="1"><stop stop-color="#9333ea"/><stop offset=".25" stop-color="#2563eb"/><stop offset=".5" stop-color="#10b981"/><stop offset=".75" stop-color="#eab308"/><stop offset="1" stop-color="#f97316"/></linearGradient></defs><path d="M55 7A51 51 0 0 0 14 88L5 110l25-6A51 51 0 1 0 55 7Z" fill="url(#rainbow)"/><path d="M55 15A43 43 0 0 0 23 87l-5 12 14-4a43 43 0 1 0 23-80Z" fill="white"/><text x="58" y="69" text-anchor="middle" font-family="system-ui,sans-serif" font-size="27" font-weight="800" fill="#0369a1">onAir</text></svg><span><strong>Connect <span class="brand-air">onAir</span></strong><small>People. Skills. Possibilities.</small></span></a>
-    <nav class="step-nav" aria-label="Workflow"><a href="#profile" data-screen="profile"><span class="step-number">1</span> Profile</a><a href="#matching" data-screen="matching"><span class="step-number">2</span> Opportunities</a><a href="#review" data-screen="review"><span class="step-number">3</span> Review</a></nav>
-    <button class="button quiet compact" id="workspace-button" type="button">Workspace <span aria-hidden="true">↗</span></button>
-  </div></header>
-  <div class="storage-alert" id="storage-alert" role="alert" hidden></div>
-  <main id="main" tabindex="-1">
-    <section id="profile-screen" class="screen" aria-labelledby="profile-heading">
-      <div class="page-heading"><div><p class="eyebrow">01 / YOUR STARTING POINT</p><h1 id="profile-heading" tabindex="-1">Your experience.<br><span class="muted-heading">A clearer next step.</span></h1><p class="lede">Turn your resume into an editable skills profile. You stay in control of every detail.</p></div><div class="context-note"><span class="status-dot"></span><div><strong>A workspace on your device</strong><p>Documents are read in your browser.<br>Nothing is sent to a recruiter.</p></div></div></div>
-      <div class="profile-grid">
-        <section class="panel" aria-labelledby="source-heading"><div class="panel-header"><div><p class="eyebrow">INPUT SOURCES</p><h2 id="source-heading">Start with what you have</h2></div><span class="panel-symbol" aria-hidden="true">↥</span></div>
-          <form id="source-form" class="panel-body">
-            <div class="drop-zone" id="drop-zone"><span class="upload-symbol" aria-hidden="true">↥</span><label for="resume-file">Choose a resume <span>or drop it here</span></label><input type="file" id="resume-file" accept=".pdf,.docx,.txt"><small>PDF, DOCX, or TXT · up to 10 MB</small><p id="file-status" role="status"></p></div>
-            <div class="source-divider"><span>OR ADD TEXT</span></div>
-            <label for="source-text">Resume or profile text</label><textarea id="source-text" rows="8" maxlength="50000" placeholder="Paste your experience, education, skills, and interests. Use headings like Skills: or Education: for clearer results."></textarea><div class="field-meta"><span>Review extracted skills before continuing.</span><span id="character-count">0 / 50,000</span></div>
-            <label for="source-url">Portfolio or profile link <span class="optional">optional</span></label><input id="source-url" type="url" maxlength="2000" placeholder="https://your-portfolio.com"><p class="field-help">Saved as a reference link. Its content is not imported.</p>
-            <p class="form-error" id="source-error" role="alert" hidden></p><div class="actions"><button class="button primary grow" id="generate-button" type="submit">Build my profile <span aria-hidden="true">→</span></button><button class="button secondary" id="sample-button" type="button">Try a sample</button></div>
-          </form>
-        </section>
-        <section class="panel profile-panel" aria-labelledby="draft-heading"><div class="panel-header"><div><p class="eyebrow">YOUR PROFILE</p><h2 id="draft-heading">Make it yours</h2></div><span class="badge" id="profile-badge">Not started</span></div><div class="panel-body"><div class="callout" id="profile-guidance">Build from your resume or enter details below. Skills are detected by keywords; check them for accuracy.</div>
-          <form id="profile-form"><label for="candidate-name">Name</label><input id="candidate-name" maxlength="100" autocomplete="name" placeholder="Your full name"><label for="candidate-skills">Skills <span class="optional">separate with commas</span></label><textarea id="candidate-skills" rows="2" maxlength="5000" placeholder="Python, Networking, Technical Writing"></textarea><div class="chips" id="skill-preview" aria-label="Current skills"></div><label for="candidate-education">Education</label><textarea id="candidate-education" rows="2" maxlength="5000" placeholder="Degree, school, expected graduation"></textarea><label for="candidate-experience">Experience</label><textarea id="candidate-experience" rows="3" maxlength="5000" placeholder="Roles, projects, and accomplishments"></textarea><label for="candidate-interests">Interests <span class="optional">separate with commas</span></label><input id="candidate-interests" maxlength="5000" placeholder="Open source, AI ethics, community technology"><p class="form-error" id="profile-error" role="alert" hidden></p><div class="profile-footer"><span id="profile-save-status" class="field-help">Edits save on this device.</span><button class="button primary" type="submit">Find opportunities <span aria-hidden="true">→</span></button></div></form>
-        </div></section>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#047857" />
+    <meta
+      name="description"
+      content="Build a skills profile, explore opportunities, and review a match with Connect onAir."
+    />
+    <title>Connect onAir | Profiles & Opportunities</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/styles.css" />
+    <script type="module" src="/src/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a href="#profile" class="brand" aria-label="Connect onAir home"
+          ><svg viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <linearGradient id="rainbow" x2="1" y2="1">
+                <stop stop-color="#9333ea" />
+                <stop offset=".25" stop-color="#2563eb" />
+                <stop offset=".5" stop-color="#10b981" />
+                <stop offset=".75" stop-color="#eab308" />
+                <stop offset="1" stop-color="#f97316" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M55 7A51 51 0 0 0 14 88L5 110l25-6A51 51 0 1 0 55 7Z"
+              fill="url(#rainbow)"
+            />
+            <path
+              d="M55 15A43 43 0 0 0 23 87l-5 12 14-4a43 43 0 1 0 23-80Z"
+              fill="white"
+            />
+            <text
+              x="58"
+              y="69"
+              text-anchor="middle"
+              font-family="system-ui,sans-serif"
+              font-size="27"
+              font-weight="800"
+              fill="#0369a1"
+            >
+              onAir
+            </text></svg
+          ><span
+            ><strong>Connect <span class="brand-air">onAir</span></strong
+            ><small>People. Skills. Possibilities.</small></span
+          ></a
+        >
+        <nav class="step-nav" aria-label="Workflow">
+          <a href="#profile" data-screen="profile"
+            ><span class="step-number">1</span> Profile</a
+          ><a href="#matching" data-screen="matching"
+            ><span class="step-number">2</span> Opportunities</a
+          ><a href="#review" data-screen="review"
+            ><span class="step-number">3</span> Review</a
+          >
+        </nav>
+        <button
+          class="button quiet compact"
+          id="workspace-button"
+          type="button"
+        >
+          Workspace <span aria-hidden="true">↗</span>
+        </button>
       </div>
-    </section>
-    <section id="matching-screen" class="screen" aria-labelledby="matching-heading" hidden>
-      <div class="page-heading"><div><p class="eyebrow">02 / EXPLORE YOUR OPTIONS</p><h1 id="matching-heading" tabindex="-1">Find where you fit.</h1><p class="lede">Compare opportunities against your skills, with a clear explanation for every score.</p></div><button class="button primary" id="add-opportunity" type="button">+ Add opportunity</button></div><div class="summary-strip" id="match-summary"></div>
-      <div class="matching-grid"><section aria-label="Opportunity results"><div class="filters"><div class="search-field"><label for="search">Search opportunities</label><input id="search" type="search" placeholder="Title, organization, or skill"></div><div><label for="filter-type">Type</label><select id="filter-type"><option value="">All types</option></select></div><div><label for="filter-category">Area</label><select id="filter-category"><option value="">All areas</option></select></div></div><div class="results-heading"><span id="result-count" role="status"></span><span>Sorted by skill coverage</span></div><div id="opportunity-list" class="opportunity-list"></div></section><aside class="panel match-detail" id="match-detail" aria-label="Match explanation"></aside></div>
-    </section>
-    <section id="review-screen" class="screen" aria-labelledby="review-heading" hidden>
-      <div class="page-heading"><div><p class="eyebrow">03 / A HUMAN MAKES THE CALL</p><h1 id="review-heading" tabindex="-1">Review the connection.</h1><p class="lede">Check the source, consider the gaps, and record a decision you can come back to.</p></div><span class="badge large" id="review-badge">Awaiting selection</span></div>
-      <div class="review-grid"><section class="panel" aria-label="Review draft"><div class="panel-header"><div><p class="eyebrow">MATCH RECORD</p><h2>What you’re reviewing</h2></div><span class="panel-symbol" aria-hidden="true">✓</span></div><div id="review-content" class="panel-body"></div></section><section class="panel" aria-labelledby="decision-heading"><div class="panel-header"><div><p class="eyebrow">CURATOR DECISION</p><h2 id="decision-heading">Add your perspective</h2></div></div><div class="panel-body"><p class="field-help">This records a decision in this browser. It does not publish to onAir or contact the candidate.</p><form id="review-form"><label for="reviewer">Reviewer’s name</label><input id="reviewer" maxlength="100" autocomplete="name" required placeholder="Who reviewed this match?"><label for="review-note">Notes or requested changes</label><textarea id="review-note" maxlength="5000" rows="5" placeholder="What should be confirmed or improved before moving forward?"></textarea><label class="check-label"><input type="checkbox" id="confirm-review"><span>I checked the profile and opportunity details.</span></label><p class="form-error" id="review-error" role="alert" hidden></p><div class="actions vertical"><button class="button primary" id="approve-button" type="submit" value="approved">Approve match</button><button class="button secondary" id="changes-button" type="submit" value="changes_requested">Request changes</button></div></form><div class="callout review-outcome" id="review-outcome" hidden></div></div></section></div>
-      <section class="history-section" aria-labelledby="history-heading"><div class="section-heading"><h2 id="history-heading">Decision history</h2><span class="field-help">Snapshots stay unchanged when you edit a profile.</span></div><div id="review-history"></div></section>
-    </section>
-    <footer class="site-footer"><span>Connect onAir <span class="footer-divider">/</span> Capstone working demo</span><span id="save-indicator"><span class="status-dot"></span> Saved on this device</span><a href="#matching">Explore opportunities <span aria-hidden="true">↗</span></a></footer>
-  </main>
-  <dialog id="workspace-dialog" aria-labelledby="workspace-heading"><div class="dialog-header"><div><p class="eyebrow">YOUR DATA</p><h2 id="workspace-heading">Workspace</h2></div><button class="icon-button" data-close="workspace-dialog" aria-label="Close workspace" type="button">×</button></div><div class="dialog-body"><p>Your profile, listings, and decisions are stored in this browser on this device. Anyone using this browser can access them. Export a backup to move them elsewhere.</p><div class="workspace-stats" id="workspace-stats"></div><button class="button primary full" id="export-button" type="button">Export workspace (.json)</button><label class="import-label" for="import-file">Restore a workspace backup</label><input type="file" id="import-file" accept=".json,application/json"><p class="field-help">Restoring replaces this workspace after confirmation. Back up your current data first.</p><p class="form-error" id="workspace-error" role="alert" hidden></p><hr><button class="button danger full" id="reset-button" type="button">Reset this workspace</button></div></dialog>
-  <dialog id="opportunity-dialog" aria-labelledby="opportunity-heading"><div class="dialog-header"><div><p class="eyebrow">OPPORTUNITY DETAILS</p><h2 id="opportunity-heading">Add an opportunity</h2></div><button class="icon-button" data-close="opportunity-dialog" aria-label="Close opportunity form" type="button">×</button></div><form id="opportunity-form" class="dialog-body"><div class="two-fields"><div><label for="opp-title">Title</label><input id="opp-title" required maxlength="120"></div><div><label for="opp-organization">Organization</label><input id="opp-organization" required maxlength="120"></div></div><div class="two-fields"><div><label for="opp-type">Type</label><select id="opp-type"><option>Internship</option><option>Research</option><option>Fellowship</option><option>Volunteer</option><option>Job</option><option>Project</option></select></div><div><label for="opp-category">Area</label><input id="opp-category" required maxlength="80" placeholder="e.g. Cybersecurity"></div></div><label for="opp-location">Location or work arrangement</label><input id="opp-location" required maxlength="120" placeholder="Remote, hybrid, or a city"><label for="opp-description">Description</label><textarea id="opp-description" rows="3" required maxlength="5000"></textarea><label for="opp-required">Required skills <span class="optional">comma separated</span></label><input id="opp-required" required maxlength="5000" placeholder="Python, SQL"><label for="opp-preferred">Preferred skills <span class="optional">optional</span></label><input id="opp-preferred" maxlength="5000"><label for="opp-interests">Related interests <span class="optional">optional</span></label><input id="opp-interests" maxlength="5000"><label for="opp-url">Original listing link <span class="optional">optional</span></label><input id="opp-url" type="url" maxlength="2000" placeholder="https://"><p class="form-error" id="opportunity-error" role="alert" hidden></p><div class="actions"><button type="submit" class="button primary grow">Save opportunity</button><button id="delete-opportunity" type="button" class="button danger" hidden>Delete</button></div></form></dialog>
-  <dialog id="confirm-dialog" class="small-dialog" aria-labelledby="confirm-heading"><div class="dialog-body"><h2 id="confirm-heading">Replace workspace?</h2><p id="confirm-message"></p><div class="actions"><button class="button secondary" id="confirm-cancel" type="button">Cancel</button><button class="button primary" id="confirm-action" type="button">Continue</button></div></div></dialog>
-  <div class="toast" id="toast" role="status" hidden></div>
-</body>
+    </header>
+    <div class="storage-alert" id="storage-alert" role="alert" hidden></div>
+    <main id="main" tabindex="-1">
+      <section
+        id="profile-screen"
+        class="screen"
+        aria-labelledby="profile-heading"
+      >
+        <div class="page-heading">
+          <div>
+            <h1 id="profile-heading" tabindex="-1">Your profile</h1>
+            <p class="lede">
+              Add your experience. Review your skills. Find your next
+              opportunity.
+            </p>
+          </div>
+        </div>
+        <div class="profile-grid">
+          <section class="panel" aria-labelledby="source-heading">
+            <div class="panel-header">
+              <div>
+                <h2 id="source-heading">Add your experience</h2>
+              </div>
+            </div>
+            <form id="source-form" class="panel-body">
+              <div class="drop-zone" id="drop-zone">
+                <span class="upload-symbol" aria-hidden="true">↥</span
+                ><label for="resume-file"
+                  >Choose a resume <span>or drop it here</span></label
+                ><input
+                  type="file"
+                  id="resume-file"
+                  accept=".pdf,.docx,.txt"
+                /><small>PDF, DOCX, or TXT · up to 10 MB</small>
+                <p id="file-status" role="status"></p>
+              </div>
+              <div class="source-divider"><span>OR ADD TEXT</span></div>
+              <label for="source-text">Resume or profile text</label
+              ><textarea
+                id="source-text"
+                rows="7"
+                maxlength="50000"
+                placeholder="Paste your resume, or describe your skills, education, and experience."
+              ></textarea>
+              <div class="field-meta">
+                <span>Processed on this device.</span
+                ><span id="character-count">0 / 50,000</span>
+              </div>
+              <label for="source-url"
+                >Portfolio or profile link
+                <span class="optional">optional</span></label
+              ><input
+                id="source-url"
+                type="url"
+                maxlength="2000"
+                placeholder="https://your-portfolio.com"
+              />
+              <p class="field-help">
+                Saved as a reference link. Its content is not imported.
+              </p>
+              <p class="form-error" id="source-error" role="alert" hidden></p>
+              <div class="actions">
+                <button
+                  class="button primary grow"
+                  id="generate-button"
+                  type="submit"
+                >
+                  Build my profile <span aria-hidden="true">→</span></button
+                ><button
+                  class="button secondary"
+                  id="sample-button"
+                  type="button"
+                >
+                  Try a sample
+                </button>
+              </div>
+            </form>
+          </section>
+          <section class="panel profile-panel" aria-labelledby="draft-heading">
+            <div class="panel-header">
+              <div>
+                <h2 id="draft-heading">Review your details</h2>
+              </div>
+              <span class="badge" id="profile-badge">Not started</span>
+            </div>
+            <div class="panel-body">
+              <div class="field-help" id="profile-guidance">
+                Edit any field. Check detected skills before continuing.
+              </div>
+              <form id="profile-form">
+                <label for="candidate-name">Name</label
+                ><input
+                  id="candidate-name"
+                  maxlength="100"
+                  autocomplete="name"
+                  placeholder="Your full name"
+                /><label for="candidate-skills"
+                  >Skills
+                  <span class="optional">separate with commas</span></label
+                ><textarea
+                  id="candidate-skills"
+                  rows="2"
+                  maxlength="5000"
+                  placeholder="Python, Networking, Technical Writing"
+                ></textarea>
+                <div
+                  class="chips"
+                  id="skill-preview"
+                  aria-label="Current skills"
+                ></div>
+                <label for="candidate-education">Education</label
+                ><textarea
+                  id="candidate-education"
+                  rows="2"
+                  maxlength="5000"
+                  placeholder="Degree, school, expected graduation"
+                ></textarea
+                ><label for="candidate-experience">Experience</label
+                ><textarea
+                  id="candidate-experience"
+                  rows="3"
+                  maxlength="5000"
+                  placeholder="Roles, projects, and accomplishments"
+                ></textarea
+                ><label for="candidate-interests"
+                  >Interests
+                  <span class="optional">separate with commas</span></label
+                ><input
+                  id="candidate-interests"
+                  maxlength="5000"
+                  placeholder="Open source, AI ethics, community technology"
+                />
+                <p
+                  class="form-error"
+                  id="profile-error"
+                  role="alert"
+                  hidden
+                ></p>
+                <div class="profile-footer">
+                  <span id="profile-save-status" class="field-help"
+                    >Edits save on this device.</span
+                  ><button class="button primary" type="submit">
+                    Find opportunities <span aria-hidden="true">→</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+        </div>
+      </section>
+      <section
+        id="matching-screen"
+        class="screen"
+        aria-labelledby="matching-heading"
+        hidden
+      >
+        <div class="page-heading">
+          <div>
+            <h1 id="matching-heading" tabindex="-1">Opportunities</h1>
+            <p class="lede">
+              Compare opportunities against your skills, with a clear
+              explanation for every score.
+            </p>
+          </div>
+          <button class="button primary" id="add-opportunity" type="button">
+            + Add opportunity
+          </button>
+        </div>
+        <div class="summary-strip" id="match-summary"></div>
+        <div class="matching-grid">
+          <section aria-label="Opportunity results">
+            <div class="filters">
+              <div class="search-field">
+                <label for="search">Search opportunities</label
+                ><input
+                  id="search"
+                  type="search"
+                  placeholder="Title, organization, or skill"
+                />
+              </div>
+              <div>
+                <label for="filter-type">Type</label
+                ><select id="filter-type">
+                  <option value="">All types</option>
+                </select>
+              </div>
+              <div>
+                <label for="filter-category">Area</label
+                ><select id="filter-category">
+                  <option value="">All areas</option>
+                </select>
+              </div>
+            </div>
+            <div class="results-heading">
+              <span id="result-count" role="status"></span
+              ><span>Highest match first</span>
+            </div>
+            <div id="opportunity-list" class="opportunity-list"></div>
+          </section>
+          <aside
+            class="panel match-detail"
+            id="match-detail"
+            aria-label="Match explanation"
+          ></aside>
+        </div>
+      </section>
+      <section
+        id="review-screen"
+        class="screen"
+        aria-labelledby="review-heading"
+        hidden
+      >
+        <div class="page-heading">
+          <div>
+            <h1 id="review-heading" tabindex="-1">Review match</h1>
+            <p class="lede">
+              Check the source, consider the gaps, and record a decision you can
+              come back to.
+            </p>
+          </div>
+          <span class="badge large" id="review-badge">Awaiting selection</span>
+        </div>
+        <div class="review-grid">
+          <section class="panel" aria-label="Review draft">
+            <div class="panel-header">
+              <div>
+                <h2>What you’re reviewing</h2>
+              </div>
+            </div>
+            <div id="review-content" class="panel-body"></div>
+          </section>
+          <section class="panel" aria-labelledby="decision-heading">
+            <div class="panel-header">
+              <div>
+                <h2 id="decision-heading">Add your perspective</h2>
+              </div>
+            </div>
+            <div class="panel-body">
+              <p class="field-help">
+                This records a decision in this browser. It does not publish to
+                onAir or contact the candidate.
+              </p>
+              <form id="review-form">
+                <label for="reviewer">Reviewer’s name</label
+                ><input
+                  id="reviewer"
+                  maxlength="100"
+                  autocomplete="name"
+                  required
+                  placeholder="Who reviewed this match?"
+                /><label for="review-note">Notes or requested changes</label
+                ><textarea
+                  id="review-note"
+                  maxlength="5000"
+                  rows="5"
+                  placeholder="What should be confirmed or improved before moving forward?"
+                ></textarea
+                ><label class="check-label"
+                  ><input type="checkbox" id="confirm-review" /><span
+                    >I checked the profile and opportunity details.</span
+                  ></label
+                >
+                <p class="form-error" id="review-error" role="alert" hidden></p>
+                <div class="actions vertical">
+                  <button
+                    class="button primary"
+                    id="approve-button"
+                    type="submit"
+                    value="approved"
+                  >
+                    Approve match</button
+                  ><button
+                    class="button secondary"
+                    id="changes-button"
+                    type="submit"
+                    value="changes_requested"
+                  >
+                    Request changes
+                  </button>
+                </div>
+              </form>
+              <div
+                class="callout review-outcome"
+                id="review-outcome"
+                hidden
+              ></div>
+            </div>
+          </section>
+        </div>
+        <section class="history-section" aria-labelledby="history-heading">
+          <div class="section-heading">
+            <h2 id="history-heading">Decision history</h2>
+            <span class="field-help"
+              >Snapshots stay unchanged when you edit a profile.</span
+            >
+          </div>
+          <div id="review-history"></div>
+        </section>
+      </section>
+      <footer class="site-footer">
+        <span
+          >Connect onAir <span class="footer-divider">/</span> Capstone working
+          demo</span
+        ><span id="save-indicator"
+          ><span class="status-dot"></span> Saved on this device</span
+        ><a href="#matching"
+          >Explore opportunities <span aria-hidden="true">↗</span></a
+        >
+      </footer>
+    </main>
+    <dialog id="workspace-dialog" aria-labelledby="workspace-heading">
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">YOUR DATA</p>
+          <h2 id="workspace-heading">Workspace</h2>
+        </div>
+        <button
+          class="icon-button"
+          data-close="workspace-dialog"
+          aria-label="Close workspace"
+          type="button"
+        >
+          ×
+        </button>
+      </div>
+      <div class="dialog-body">
+        <p>
+          Your profile, listings, and decisions are stored in this browser on
+          this device. Anyone using this browser can access them. Export a
+          backup to move them elsewhere.
+        </p>
+        <div class="workspace-stats" id="workspace-stats"></div>
+        <button class="button primary full" id="export-button" type="button">
+          Export workspace (.json)</button
+        ><label class="import-label" for="import-file"
+          >Restore a workspace backup</label
+        ><input type="file" id="import-file" accept=".json,application/json" />
+        <p class="field-help">
+          Restoring replaces this workspace after confirmation. Back up your
+          current data first.
+        </p>
+        <p class="form-error" id="workspace-error" role="alert" hidden></p>
+        <hr />
+        <button class="button danger full" id="reset-button" type="button">
+          Reset this workspace
+        </button>
+      </div>
+    </dialog>
+    <dialog id="opportunity-dialog" aria-labelledby="opportunity-heading">
+      <div class="dialog-header">
+        <div>
+          <p class="eyebrow">OPPORTUNITY DETAILS</p>
+          <h2 id="opportunity-heading">Add an opportunity</h2>
+        </div>
+        <button
+          class="icon-button"
+          data-close="opportunity-dialog"
+          aria-label="Close opportunity form"
+          type="button"
+        >
+          ×
+        </button>
+      </div>
+      <form id="opportunity-form" class="dialog-body">
+        <div class="two-fields">
+          <div>
+            <label for="opp-title">Title</label
+            ><input id="opp-title" required maxlength="120" />
+          </div>
+          <div>
+            <label for="opp-organization">Organization</label
+            ><input id="opp-organization" required maxlength="120" />
+          </div>
+        </div>
+        <div class="two-fields">
+          <div>
+            <label for="opp-type">Type</label
+            ><select id="opp-type">
+              <option>Internship</option>
+              <option>Research</option>
+              <option>Fellowship</option>
+              <option>Volunteer</option>
+              <option>Job</option>
+              <option>Project</option>
+            </select>
+          </div>
+          <div>
+            <label for="opp-category">Area</label
+            ><input
+              id="opp-category"
+              required
+              maxlength="80"
+              placeholder="e.g. Cybersecurity"
+            />
+          </div>
+        </div>
+        <label for="opp-location">Location or work arrangement</label
+        ><input
+          id="opp-location"
+          required
+          maxlength="120"
+          placeholder="Remote, hybrid, or a city"
+        /><label for="opp-description">Description</label
+        ><textarea
+          id="opp-description"
+          rows="3"
+          required
+          maxlength="5000"
+        ></textarea
+        ><label for="opp-required"
+          >Required skills <span class="optional">comma separated</span></label
+        ><input
+          id="opp-required"
+          required
+          maxlength="5000"
+          placeholder="Python, SQL"
+        /><label for="opp-preferred"
+          >Preferred skills <span class="optional">optional</span></label
+        ><input id="opp-preferred" maxlength="5000" /><label for="opp-interests"
+          >Related interests <span class="optional">optional</span></label
+        ><input id="opp-interests" maxlength="5000" /><label for="opp-url"
+          >Original listing link <span class="optional">optional</span></label
+        ><input
+          id="opp-url"
+          type="url"
+          maxlength="2000"
+          placeholder="https://"
+        />
+        <p class="form-error" id="opportunity-error" role="alert" hidden></p>
+        <div class="actions">
+          <button type="submit" class="button primary grow">
+            Save opportunity</button
+          ><button
+            id="delete-opportunity"
+            type="button"
+            class="button danger"
+            hidden
+          >
+            Delete
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog
+      id="confirm-dialog"
+      class="small-dialog"
+      aria-labelledby="confirm-heading"
+    >
+      <div class="dialog-body">
+        <h2 id="confirm-heading">Replace workspace?</h2>
+        <p id="confirm-message"></p>
+        <div class="actions">
+          <button class="button secondary" id="confirm-cancel" type="button">
+            Cancel</button
+          ><button class="button primary" id="confirm-action" type="button">
+            Continue
+          </button>
+        </div>
+      </div>
+    </dialog>
+    <div class="toast" id="toast" role="status" hidden></div>
+  </body>
 </html>
