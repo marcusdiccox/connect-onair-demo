@@ -1277,3 +1277,244 @@ dialog::backdrop {
   font-size: 0.8rem;
   color: var(--muted);
 }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.header-actions [aria-current="page"] {
+  color: var(--green-dark);
+  background: #eaf5ef;
+}
+.project-layout {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+}
+.project-nav {
+  position: sticky;
+  top: 105px;
+  display: grid;
+  gap: 5px;
+  font-size: 0.86rem;
+}
+.project-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 7px 0;
+}
+.project-nav a:hover {
+  color: var(--green-dark);
+  text-decoration: underline;
+}
+.project-content {
+  min-width: 0;
+}
+.project-section {
+  scroll-margin-top: 100px;
+  padding: 0 0 42px;
+  margin-bottom: 38px;
+  border-bottom: 1px solid var(--border);
+}
+.project-section > h2 {
+  font-size: 1.4rem;
+  letter-spacing: -0.5px;
+  margin-bottom: 16px;
+}
+.project-section p {
+  color: #536471;
+}
+.project-section .project-intro {
+  margin-bottom: 20px;
+}
+#project-overview .project-intro {
+  color: #172b35;
+  font-size: 1.6rem;
+  line-height: 1.45;
+  letter-spacing: -0.5px;
+  max-width: 760px;
+}
+.project-section .project-direction {
+  margin: 18px 0 24px;
+  color: var(--green-dark);
+  font-weight: 600;
+}
+.project-actions {
+  margin-top: 24px;
+}
+.project-row {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  gap: 28px;
+  padding: 22px 0;
+  border-top: 1px solid var(--border);
+}
+.project-row-title h3 {
+  font-size: 1rem;
+  margin: 4px 0 8px;
+}
+.project-number {
+  font-size: 0.78rem;
+  color: var(--green);
+  font-weight: 700;
+}
+.project-capabilities {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+.project-capability {
+  padding: 22px 0 4px;
+  border-top: 1px solid var(--border);
+}
+.project-capability h3 {
+  margin: 12px 0 9px;
+}
+.project-state {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 5px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--green-dark);
+  background: #eaf5ef;
+}
+.project-state.separately_tested {
+  color: #73531d;
+  background: #fbf2dc;
+}
+.project-state.planned {
+  color: #536471;
+  background: #edf1f4;
+}
+.project-detail {
+  padding: 17px 0;
+  border-top: 1px solid var(--border);
+}
+.project-detail summary {
+  cursor: pointer;
+  font-weight: 600;
+  min-height: 28px;
+}
+.project-detail p {
+  margin: 13px 0;
+}
+.project-detail .project-owner {
+  color: var(--green-dark);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+.project-list {
+  margin: 0;
+  padding-left: 22px;
+}
+.project-list li {
+  padding-left: 4px;
+  margin-bottom: 18px;
+  color: #536471;
+}
+.project-list strong,
+.project-list a {
+  color: #172b35;
+}
+.project-list p {
+  margin-top: 5px;
+}
+.project-table-scroll {
+  overflow-x: auto;
+}
+.project-table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 620px;
+  font-size: 0.86rem;
+}
+.project-table caption {
+  text-align: left;
+  color: var(--green-dark);
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+.project-table th,
+.project-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 16px 15px;
+  border-bottom: 1px solid var(--border);
+}
+.project-table thead {
+  background: #eaf5ef;
+}
+.project-table th:first-child {
+  width: 23%;
+}
+.project-table td {
+  color: #536471;
+}
+.project-roadmap {
+  margin: 0;
+  padding-left: 24px;
+}
+.project-roadmap li {
+  padding: 0 0 25px 12px;
+}
+.project-roadmap h3 {
+  font-size: 1rem;
+  margin: 3px 0 5px;
+}
+.project-roadmap .project-date {
+  color: var(--green-dark);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+@media (max-width: 1000px) {
+  .header-inner {
+    gap: 8px;
+  }
+  .header-actions .button {
+    padding-inline: 9px;
+  }
+  .project-layout {
+    gap: 25px;
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+  .project-row {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 20px;
+  }
+}
+@media (max-width: 760px) {
+  .header-actions .button {
+    padding-inline: 6px;
+    font-size: 0.78rem;
+  }
+  .project-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+  .project-nav {
+    position: static;
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 10px;
+  }
+  .project-nav a {
+    white-space: nowrap;
+  }
+  .project-row,
+  .project-capabilities {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  #project-overview .project-intro {
+    font-size: 1.3rem;
+  }
+  .project-section {
+    scroll-margin-top: 20px;
+    margin-bottom: 26px;
+    padding-bottom: 30px;
+  }
+}

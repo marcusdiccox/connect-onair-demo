@@ -61,13 +61,16 @@
             ><span class="step-number">3</span> Review</a
           >
         </nav>
-        <button
-          class="button quiet compact"
-          id="workspace-button"
-          type="button"
-        >
-          Workspace <span aria-hidden="true">↗</span>
-        </button>
+        <div class="header-actions">
+          <a class="button quiet compact" href="#project" data-screen="project">Project brief</a>
+          <button
+            class="button quiet compact"
+            id="workspace-button"
+            type="button"
+          >
+            Workspace <span aria-hidden="true">↗</span>
+          </button>
+        </div>
       </div>
     </header>
     <div class="storage-alert" id="storage-alert" role="alert" hidden></div>
@@ -379,6 +382,30 @@
           </div>
           <div id="review-history"></div>
         </section>
+      </section>
+      <section id="project-screen" class="screen" aria-labelledby="project-heading" hidden>
+        <div class="page-heading">
+          <div>
+            <h1 id="project-heading" tabindex="-1">The Connect onAir project</h1>
+            <p class="lede">The goal, what works and what comes next.</p>
+          </div>
+          <span class="badge neutral">Updated November 10, 2026</span>
+        </div>
+        <div class="project-layout">
+          <nav class="project-nav" aria-label="Project brief sections">
+            <a href="#project-overview">The goal</a>
+            <a href="#project-scope">Scope</a>
+            <a href="#project-status">Current status</a>
+            <a href="#project-approach">Parser and AI</a>
+            <a href="#project-integration">Integration</a>
+            <a href="#project-curation">Curation pilot</a>
+            <a href="#project-pilot">Pilot targets</a>
+            <a href="#project-decisions">Open decisions</a>
+            <a href="#project-roadmap">Development plan</a>
+            <a href="#project-sources">Sources</a>
+          </nav>
+          <div id="project-content" class="project-content"></div>
+        </div>
       </section>
       <footer class="site-footer">
         <span

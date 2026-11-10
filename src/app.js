@@ -1,4 +1,5 @@
 import { sampleResume } from "./data.js";
+import { renderProject } from "./project.js";
 import {
   canonicalSkill,
   cleanList,
@@ -743,16 +744,17 @@ function download(data, filename) {
 }
 
 function route(focus = true) {
-  const screen = ["profile", "matching", "review"].includes(
-    location.hash.slice(1),
-  )
-    ? location.hash.slice(1)
+  const hash = location.hash.slice(1);
+  const projectSection = hash.startsWith("project-") &&
+    document.querySelector("#project-content").querySelector(`[id="${CSS.escape(hash)}"]`);
+  const screen = projectSection ? "project" : ["profile", "matching", "review", "project"].includes(hash)
+    ? hash
     : "profile";
   for (const section of document.querySelectorAll(".screen"))
     section.hidden = section.id !== `${screen}-screen`;
   for (const anchor of document.querySelectorAll("[data-screen]")) {
     if (anchor.dataset.screen === screen)
-      anchor.setAttribute("aria-current", "step");
+      anchor.setAttribute("aria-current", screen === "project" ? "page" : "step");
     else anchor.removeAttribute("aria-current");
   }
   if (screen === "matching") {
@@ -761,7 +763,7 @@ function route(focus = true) {
   }
   if (screen === "review") renderReview();
   errorAt("#review-error");
-  if (focus) {
+  if (focus && !projectSection) {
     $(`#${screen}-heading`).focus({ preventScroll: true });
     window.scrollTo({ top: 0, behavior: "instant" });
   }
@@ -1209,6 +1211,7 @@ $("#listing-file").addEventListener("change", async (event) => {
 
 fillSources();
 fillProfile();
+renderProject($("#project-content"));
 storageAlert(restored.error);
 if (restored.error)
   $("#save-indicator").textContent = "Not saved · export a backup";
