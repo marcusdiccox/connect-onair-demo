@@ -94,7 +94,9 @@ export function parseProfileResponse(
         "An evidence quote was not found in your source. Ask PatriotAI to use exact quotations.",
       );
     return { field: item.field, quote: item.quote.trim() };
-  });
+  }).filter((item, index, items) => items.findIndex(
+    (other) => other.field === item.field && compact(other.quote) === compact(item.quote),
+  ) === index);
   for (const field of fields) {
     if (value[field].length && !evidence.some((item) => item.field === field))
       throw new Error(`The ${field} field needs a source quotation.`);
