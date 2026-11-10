@@ -130,6 +130,11 @@
                 Saved as a reference link. Its content is not imported.
               </p>
               <p class="form-error" id="source-error" role="alert" hidden></p>
+              <p class="field-help">
+                <a href="./demo-resume.pdf" download
+                  >Download a fictional resume to test uploads</a
+                >
+              </p>
               <div class="actions">
                 <button
                   class="button primary grow"
@@ -145,6 +150,13 @@
                   Try a sample
                 </button>
               </div>
+              <button
+                class="button secondary full assistant-button"
+                id="patriot-button"
+                type="button"
+              >
+                Draft with PatriotAI
+              </button>
             </form>
           </section>
           <section class="panel profile-panel" aria-labelledby="draft-heading">
@@ -433,6 +445,29 @@
         </button>
       </div>
       <form id="opportunity-form" class="dialog-body">
+        <details class="listing-intake" id="listing-intake">
+          <summary>Start from a description or document</summary>
+          <label for="listing-source">Opportunity source text</label>
+          <textarea
+            id="listing-source"
+            rows="5"
+            maxlength="50000"
+            placeholder="Title: Security Intern&#10;Organization: Your organization&#10;Type: Internship&#10;Location: Remote&#10;Required skills: Python, Networking"
+          ></textarea>
+          <label for="listing-file">Upload listing document</label
+          ><input id="listing-file" type="file" accept=".pdf,.docx,.txt" />
+          <p class="field-help" id="listing-file-status" role="status">
+            PDF, DOCX, or TXT, up to 10 MB. Reference URLs are saved below.
+          </p>
+          <button
+            class="button secondary assistant-button"
+            id="listing-build"
+            type="button"
+          >
+            Create listing draft
+          </button>
+          <p class="field-help" id="listing-followup" role="status"></p>
+        </details>
         <div class="two-fields">
           <div>
             <label for="opp-title">Title</label
@@ -446,7 +481,8 @@
         <div class="two-fields">
           <div>
             <label for="opp-type">Type</label
-            ><select id="opp-type">
+            ><select id="opp-type" required>
+              <option value="">Choose a type</option>
               <option>Internship</option>
               <option>Research</option>
               <option>Fellowship</option>
@@ -497,6 +533,16 @@
           maxlength="2000"
           placeholder="https://"
         />
+        <label class="check-label"
+          ><input id="opp-reviewed" type="checkbox" required /><span
+            >I reviewed the listing details and source. Saving adds it to this
+            browser's demo.</span
+          ></label
+        >
+        <p class="field-help">
+          Publishing on the sponsor's hub still requires its curator and
+          WordPress controls.
+        </p>
         <p class="form-error" id="opportunity-error" role="alert" hidden></p>
         <div class="actions">
           <button type="submit" class="button primary grow">
@@ -511,6 +557,88 @@
           </button>
         </div>
       </form>
+    </dialog>
+    <dialog id="patriot-dialog" aria-labelledby="patriot-heading">
+      <div class="dialog-header">
+        <div><h2 id="patriot-heading">Draft with PatriotAI</h2></div>
+        <button
+          class="icon-button"
+          data-close="patriot-dialog"
+          aria-label="Close PatriotAI assistant"
+          type="button"
+        >
+          ×
+        </button>
+      </div>
+      <div class="dialog-body">
+        <p>
+          Use your Mason account to draft from this source. Nothing is sent
+          automatically. Bring the JSON response back here to check and apply
+          it.
+        </p>
+        <ol class="assistant-steps">
+          <li>
+            Copy the prompt below and
+            <a
+              href="https://patriotai.gmu.edu/chat/onechat"
+              target="_blank"
+              rel="noopener noreferrer"
+              >open PatriotAI</a
+            >.
+          </li>
+          <li>Paste it into a new chat and copy the JSON reply.</li>
+          <li>
+            Preview the reply here, check its source quotes, and apply it.
+          </li>
+        </ol>
+        <label for="patriot-prompt">Profile drafting prompt</label
+        ><textarea id="patriot-prompt" rows="4" readonly></textarea>
+        <button
+          class="button secondary assistant-button"
+          id="copy-patriot-prompt"
+          type="button"
+        >
+          Copy prompt
+        </button>
+        <label for="patriot-response">PatriotAI JSON response</label
+        ><textarea
+          id="patriot-response"
+          rows="7"
+          maxlength="100000"
+          placeholder='{"name":"...","education":"...","experience":"...","skills":[],"interests":[],"evidence":[]}'
+        ></textarea>
+        <p class="form-error" id="patriot-error" role="alert" hidden></p>
+        <button
+          class="button primary assistant-button"
+          id="preview-patriot"
+          type="button"
+        >
+          Preview draft
+        </button>
+        <section id="patriot-preview" hidden aria-label="Proposed profile">
+          <div id="patriot-preview-fields"></div>
+          <label class="check-label"
+            ><input type="checkbox" id="patriot-reviewed" /><span
+              >I checked these details against the source.</span
+            ></label
+          ><button class="button primary full" id="apply-patriot" type="button">
+            Apply reviewed draft
+          </button>
+        </section>
+        <details class="field-help assistant-button">
+          <summary>About this connection</summary>
+          <p>
+            This is a manual transfer to your signed-in PatriotAI chat. It is
+            not an automatic API connection.
+            <a
+              href="https://its.gmu.edu/ai-toolkit/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Mason's integration guidance</a
+            >
+          </p>
+        </details>
+      </div>
     </dialog>
     <dialog
       id="confirm-dialog"

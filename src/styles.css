@@ -1243,3 +1243,37 @@ dialog::backdrop {
   color: #405a4d;
   font-weight: 600;
 }
+
+.assistant-button {
+  margin-top: 14px;
+}
+.assistant-steps {
+  padding-left: 22px;
+  font-size: 0.86rem;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.listing-intake {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 22px;
+}
+.listing-intake summary {
+  cursor: pointer;
+  color: var(--green);
+  font-weight: 600;
+  font-size: 0.86rem;
+}
+#patriot-preview {
+  margin-top: 22px;
+  border-top: 1px solid var(--border);
+  padding-top: 5px;
+}
+#patriot-preview blockquote {
+  margin: 8px 0 15px;
+  padding-left: 12px;
+  border-left: 2px solid #aacbbb;
+  font-size: 0.8rem;
+  color: var(--muted);
+}

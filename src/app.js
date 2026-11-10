@@ -18,6 +18,12 @@ import {
   STORAGE_KEY,
 } from "./storage.js";
 import { extractDocument } from "./files.js";
+import {
+  buildProfilePrompt,
+  parseProfileResponse,
+  profileQuestions,
+  listingDraft,
+} from "./assistant.js";
 
 const $ = (selector) => document.querySelector(selector);
 const storage = {
@@ -31,6 +37,8 @@ let editingId = "";
 let extracting = false;
 let toastTimer;
 let pendingConfirmation;
+let proposedProfile;
+let patriotSource;
 const filters = { query: "", type: "", category: "" };
 
 function node(tag, className = "", text = "") {
@@ -158,6 +166,10 @@ function renderProfileStatus() {
   $("#profile-save-status").textContent = ready
     ? `${state.profile.skills.length} skills · saved as you edit`
     : "Add a name and at least one skill.";
+  const questions = profileQuestions(state.profile);
+  $("#profile-guidance").textContent = questions.length
+    ? `To complete your profile: ${questions.join(" ")}`
+    : "Check the detected details. You can edit any field.";
 }
 
 function updateProfile() {
@@ -226,6 +238,7 @@ async function upload(file) {
   $("#sample-button").disabled = true;
   $("#resume-file").disabled = true;
   $("#source-text").disabled = true;
+  $("#patriot-button").disabled = true;
   $("#file-status").textContent = `Reading ${file.name}…`;
   errorAt("#source-error");
   try {
@@ -265,6 +278,7 @@ async function upload(file) {
     $("#sample-button").disabled = false;
     $("#resume-file").disabled = false;
     $("#source-text").disabled = false;
+    $("#patriot-button").disabled = false;
     $("#resume-file").value = "";
   }
 }
@@ -321,13 +335,16 @@ function renderMatching() {
   const edit = node("a", "", "Edit profile →");
   edit.href = "#profile";
   summary.append(edit);
-  const results = rankedOpportunities(
+  const allResults = rankedOpportunities(
     state.profile,
     state.opportunities,
     filters,
   );
+  const results = allResults.slice(0, 10);
   $("#result-count").textContent =
-    `${results.length} ${results.length === 1 ? "opportunity" : "opportunities"}`;
+    allResults.length > 10
+      ? `Top 10 of ${allResults.length} opportunities`
+      : `${results.length} ${results.length === 1 ? "opportunity" : "opportunities"}`;
   const cards = results.map(({ opportunity, score, requiredMatched }) => {
     const selected = opportunity.id === state.selectedId;
     const card = node("button", "opportunity-card");
@@ -686,6 +703,8 @@ function openOpportunity(id = "") {
   editingId = id;
   errorAt("#opportunity-error");
   $("#opportunity-form").reset();
+  $("#listing-intake").open = !id;
+  $("#listing-followup").textContent = "";
   const opportunity = state.opportunities.find((item) => item.id === id);
   $("#opportunity-heading").textContent = opportunity
     ? "Edit opportunity"
@@ -1019,6 +1038,172 @@ window.addEventListener("storage", (event) => {
       "This workspace changed in another tab. Export any unsaved edits, then reload to use the latest saved copy.",
     );
     $("#save-indicator").textContent = "Another tab changed this workspace";
+  }
+});
+
+$("#patriot-button").addEventListener("click", () => {
+  try {
+    patriotSource = {
+      text: $("#source-text").value,
+      url: safeUrl($("#source-url").value),
+      fileName: state.draft.fileName,
+    };
+    $("#patriot-prompt").value = buildProfilePrompt(patriotSource.text);
+    $("#patriot-response").value = "";
+    $("#patriot-preview").hidden = true;
+    $("#patriot-reviewed").checked = false;
+    proposedProfile = undefined;
+    errorAt("#patriot-error");
+    $("#patriot-dialog").showModal();
+  } catch (error) {
+    errorAt("#source-error", error.message);
+  }
+});
+$("#copy-patriot-prompt").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText($("#patriot-prompt").value);
+    toast("Prompt copied. Paste it into a new PatriotAI chat.");
+  } catch {
+    $("#patriot-prompt").focus();
+    $("#patriot-prompt").select();
+    toast("Select and copy the prompt from this field.");
+  }
+});
+$("#patriot-response").addEventListener("input", () => {
+  proposedProfile = undefined;
+  $("#patriot-preview").hidden = true;
+  $("#patriot-reviewed").checked = false;
+});
+$("#preview-patriot").addEventListener("click", () => {
+  try {
+    const result = parseProfileResponse(
+      $("#patriot-response").value,
+      patriotSource.text,
+      patriotSource.url,
+      patriotSource.fileName,
+    );
+    proposedProfile = result.profile;
+    const preview = $("#patriot-preview-fields");
+    preview.replaceChildren();
+    for (const [field, label] of [
+      ["name", "Name"],
+      ["skills", "Skills"],
+      ["education", "Education"],
+      ["experience", "Experience"],
+      ["interests", "Interests"],
+    ]) {
+      const value = proposedProfile[field];
+      const section = reviewBlock(
+        label,
+        Array.isArray(value) ? value.join(", ") : value,
+      );
+      for (const citation of result.evidence.filter(
+        (item) => item.field === field,
+      ))
+        section.append(node("blockquote", "", citation.quote));
+      preview.append(section);
+    }
+    $("#patriot-preview").hidden = false;
+    $("#patriot-reviewed").checked = false;
+    errorAt("#patriot-error");
+  } catch (error) {
+    proposedProfile = undefined;
+    $("#patriot-preview").hidden = true;
+    errorAt("#patriot-error", error.message);
+  }
+});
+$("#apply-patriot").addEventListener("click", () => {
+  if (!proposedProfile || !$("#patriot-reviewed").checked) {
+    errorAt(
+      "#patriot-error",
+      "Review the proposed fields and source quotes, then check the confirmation box.",
+    );
+    return;
+  }
+  state.profile = structuredClone(proposedProfile);
+  state.draft = {
+    text: patriotSource.text,
+    url: patriotSource.url,
+    fileName: patriotSource.fileName,
+  };
+  $("#confirm-review").checked = false;
+  persist();
+  fillProfile();
+  fillSources();
+  $("#patriot-dialog").close();
+  $("#candidate-name").focus();
+  toast("Reviewed PatriotAI draft applied. You can still edit every field.");
+});
+$("#listing-build").addEventListener("click", () => {
+  try {
+    const draft = listingDraft($("#listing-source").value);
+    const apply = () => {
+      for (const key of [
+        "title",
+        "organization",
+        "type",
+        "category",
+        "location",
+        "description",
+      ])
+        $(`#opp-${key}`).value = draft[key];
+      for (const key of ["required", "preferred", "interests"])
+        $(`#opp-${key}`).value = draft[key].join(", ");
+      $("#opp-reviewed").checked = false;
+      $("#listing-followup").textContent = draft.missing.length
+        ? `Please add: ${draft.missing.join(", ")}. Check the suggested category and all other fields.`
+        : "Draft ready. Review every field and the source before saving.";
+      errorAt("#opportunity-error");
+    };
+    if ($("#opp-title").value || $("#opp-organization").value)
+      confirmAction(
+        "Replace listing fields?",
+        "This fills the listing form from your source. It does not change saved opportunities until you review and save.",
+        "Use listing draft",
+        apply,
+      );
+    else apply();
+  } catch (error) {
+    errorAt("#opportunity-error", error.message);
+  }
+});
+$("#listing-file").addEventListener("change", async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  const controls = [
+    $("#listing-build"),
+    $("#listing-file"),
+    $("#opportunity-form button[type=submit]"),
+  ];
+  controls.forEach((control) => {
+    control.disabled = true;
+  });
+  $("#listing-file-status").textContent = `Reading ${file.name}…`;
+  try {
+    const text = await extractDocument(file);
+    const apply = () => {
+      $("#listing-source").value = text;
+      $("#listing-file-status").textContent =
+        `Text loaded from ${file.name}. Choose Create listing draft.`;
+    };
+    if ($("#listing-source").value.trim())
+      confirmAction(
+        "Replace listing source?",
+        "This replaces the source text with the uploaded document. Your saved opportunities are unchanged.",
+        "Use document",
+        apply,
+      );
+    else apply();
+    errorAt("#opportunity-error");
+  } catch (error) {
+    errorAt("#opportunity-error", error.message);
+    $("#listing-file-status").textContent =
+      "Document could not be read. Paste the text instead.";
+  } finally {
+    controls.forEach((control) => {
+      control.disabled = false;
+    });
+    event.target.value = "";
   }
 });
 
