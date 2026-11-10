@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "kind": "fictional-demo-catalog",
+  "description": "Fictional Connect onAir test listings. Not live job openings. No candidate or workspace data is included.",
+  "scoring": {
+    "requiredSkills": 70,
+    "preferredSkills": 20,
+    "interests": 10,
+    "emptySections": "redistribute remaining weights proportionally",
+    "maximumResults": 10
+  },
+  "opportunities": [
+    {
+      "id": "sample-security",
+      "title": "Cybersecurity Intern",
+      "organization": "Community Security Lab",
+      "type": "Internship",
+      "category": "Cybersecurity",
+      "location": "Hybrid",
+      "description": "Investigate network alerts, write incident summaries, and automate routine log analysis with a mentor.",
+      "required": [
+        "Python",
+        "Cybersecurity",
+        "Networking"
+      ],
+      "preferred": [
+        "Linux",
+        "Incident Response",
+        "Technical Writing"
+      ],
+      "interests": [
+        "Threat Intelligence",
+        "Open Source"
+      ],
+      "url": "",
+      "sample": true
+    },
+    {
+      "id": "sample-research",
+      "title": "Research Assistant",
+      "organization": "Applied Research Studio",
+      "type": "Research",
+      "category": "Data & AI",
+      "location": "On campus",
+      "description": "Prepare datasets, summarize research findings, and help evaluate machine learning experiments.",
+      "required": [
+        "Python",
+        "Data Analysis",
+        "Research"
+      ],
+      "preferred": [
+        "Machine Learning",
+        "Statistics",
+        "Technical Writing"
+      ],
+      "interests": [
+        "AI Ethics"
+      ],
+      "url": "",
+      "sample": true
+    },
+    {
+      "id": "sample-fellowship",
+      "title": "Responsible AI Fellow",
+      "organization": "Civic Technology Collective",
+      "type": "Fellowship",
+      "category": "Data & AI",
+      "location": "Remote",
+      "description": "Explore responsible uses of machine learning and publish accessible explanations for community partners.",
+      "required": [
+        "Python",
+        "Machine Learning",
+        "AI Ethics"
+      ],
+      "preferred": [
+        "Research",
+        "Communication"
+      ],
+      "interests": [
+        "Open Source"
+      ],
+      "url": "",
+      "sample": true
+    },
+    {
+      "id": "sample-web",
+      "title": "Community Web Developer",
+      "organization": "Neighborhood Digital Hub",
+      "type": "Volunteer",
+      "category": "Web Development",
+      "location": "Remote",
+      "description": "Build accessible community pages and maintain a WordPress resource directory.",
+      "required": [
+        "HTML",
+        "CSS",
+        "JavaScript"
+      ],
+      "preferred": [
+        "WordPress",
+        "Accessibility",
+        "Git"
+      ],
+      "interests": [
+        "Open Source"
+      ],
+      "url": "",
+      "sample": true
+    },
+    {
+      "id": "sample-design",
+      "title": "Product Design Intern",
+      "organization": "Inclusive Design Studio",
+      "type": "Internship",
+      "category": "Design",
+      "location": "Hybrid",
+      "description": "Prototype user journeys, conduct usability research, and improve accessible navigation.",
+      "required": [
+        "UX Design",
+        "Figma",
+        "Research"
+      ],
+      "preferred": [
+        "Accessibility",
+        "Communication"
+      ],
+      "interests": [
+        "Community Technology"
+      ],
+      "url": "",
+      "sample": true
+    },
+    {
+      "id": "sample-outreach",
+      "title": "Digital Outreach Coordinator",
+      "organization": "Community Voices Network",
+      "type": "Volunteer",
+      "category": "Communications",
+      "location": "Remote",
+      "description": "Create community stories, organize social content, and track campaign results.",
+      "required": [
+        "Content Creation",
+        "Social Media",
+        "Communication"
+      ],
+      "preferred": [
+        "Marketing",
+        "Data Analysis",
+        "WordPress"
+      ],
+      "interests": [
+        "Community Technology"
+      ],
+      "url": "",
+      "sample": true
+    }
+  ]
+}
