@@ -19,6 +19,7 @@ import {
   STORAGE_KEY,
 } from "./storage.js";
 import { extractDocument } from "./files.js";
+import { requestProfileDraft } from "./patriot-client.js";
 import {
   buildProfilePrompt,
   parseProfileResponse,
@@ -40,6 +41,7 @@ let toastTimer;
 let pendingConfirmation;
 let proposedProfile;
 let patriotSource;
+let patriotRequest;
 const filters = { query: "", type: "", category: "" };
 
 function node(tag, className = "", text = "") {
@@ -1050,8 +1052,10 @@ $("#patriot-button").addEventListener("click", () => {
       url: safeUrl($("#source-url").value),
       fileName: state.draft.fileName,
     };
-    $("#patriot-prompt").value = buildProfilePrompt(patriotSource.text);
-    $("#patriot-response").value = "";
+    buildProfilePrompt(patriotSource.text);
+    if (patriotSource.text.length > 20000) throw new Error("Use up to 20,000 characters for AI drafting. The local parser supports longer text.");
+    $("#patriot-source-summary").textContent = `${patriotSource.fileName || "Pasted text"} · ${patriotSource.text.length.toLocaleString()} characters`;
+    $("#patriot-source-preview").textContent = patriotSource.text;
     $("#patriot-preview").hidden = true;
     $("#patriot-reviewed").checked = false;
     proposedProfile = undefined;
@@ -1061,25 +1065,30 @@ $("#patriot-button").addEventListener("click", () => {
     errorAt("#source-error", error.message);
   }
 });
-$("#copy-patriot-prompt").addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText($("#patriot-prompt").value);
-    toast("Prompt copied. Paste it into a new PatriotAI chat.");
-  } catch {
-    $("#patriot-prompt").focus();
-    $("#patriot-prompt").select();
-    toast("Select and copy the prompt from this field.");
-  }
+$("#patriot-dialog").addEventListener("close", () => {
+  patriotRequest?.abort();
+  patriotRequest = undefined;
+  $("#generate-patriot").disabled = false;
+  $("#generate-patriot").textContent = "Generate profile draft";
+  $("#patriot-status").textContent = "";
 });
-$("#patriot-response").addEventListener("input", () => {
+$("#generate-patriot").addEventListener("click", async () => {
+  if (patriotRequest) return;
+  const controller = new AbortController();
+  patriotRequest = controller;
+  const button = $("#generate-patriot");
+  button.disabled = true;
+  button.textContent = "Drafting…";
+  $("#patriot-status").textContent = "PatriotAI is reading the source. This may take a few seconds.";
   proposedProfile = undefined;
   $("#patriot-preview").hidden = true;
   $("#patriot-reviewed").checked = false;
-});
-$("#preview-patriot").addEventListener("click", () => {
+  errorAt("#patriot-error");
   try {
+    const draft = await requestProfileDraft(patriotSource.text, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(30000)]) });
+    if (patriotRequest !== controller || !$("#patriot-dialog").open) return;
     const result = parseProfileResponse(
-      $("#patriot-response").value,
+      JSON.stringify(draft),
       patriotSource.text,
       patriotSource.url,
       patriotSource.fileName,
@@ -1107,11 +1116,20 @@ $("#preview-patriot").addEventListener("click", () => {
     }
     $("#patriot-preview").hidden = false;
     $("#patriot-reviewed").checked = false;
+    $("#patriot-status").textContent = "Draft ready. Check each field and its source quote before applying it.";
     errorAt("#patriot-error");
   } catch (error) {
+    if (patriotRequest !== controller || controller.signal.aborted) return;
     proposedProfile = undefined;
     $("#patriot-preview").hidden = true;
-    errorAt("#patriot-error", error.message);
+    $("#patriot-status").textContent = "";
+    errorAt("#patriot-error", error.name === "TimeoutError" ? "The request took too long. Try again or use the local parser." : error.message);
+  } finally {
+    if (patriotRequest === controller) {
+      patriotRequest = undefined;
+      button.disabled = false;
+      button.textContent = "Generate profile draft";
+    }
   }
 });
 $("#apply-patriot").addEventListener("click", () => {

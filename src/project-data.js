@@ -1,6 +1,6 @@
 export const project = {
   name: "Connect onAir",
-  updated: "2026-11-10",
+  updated: "2026-11-17",
   goal: "Help GMU IST students and faculty find useful opportunities through checked profiles, clear matches and reviewed posts.",
   pilot: "First pilot: the GMU IST hub, with students, faculty, advisers, businesses and curators.",
   direction: "Start with opportunity matching. Reuse one draft helper for profiles and posts. People check facts and approve posts.",
@@ -13,9 +13,9 @@ export const project = {
     { title: "Resume and listing intake", status: "working", description: "Read PDF, DOCX and TXT files. Edit profile fields, draft listings and fill missing details." },
     { title: "Rules-based matching", status: "working", description: "Scores use required skills (70%), preferred skills (20%) and interests (10%). Empty groups share their weight. Scores show skill coverage, not the chance of a job offer." },
     { title: "Review and backup", status: "working", description: "Save review records in this browser. Export or restore a JSON backup. This does not create a shared account or publish to WordPress." },
-    { title: "PatriotAI profile drafts", status: "separately_tested", description: "An agent draft passed source-quote and skill checks. Copy its JSON into the site, check the facts, then apply it. The checks do not replace human review." },
+    { title: "PatriotAI profile drafts", status: "working", description: "Generate a draft in this website through the PatriotAI model API. Check its fields and source quotes, then apply it. You do not need to copy a prompt or leave the page." },
     { title: "Agent reads the demo catalog", status: "separately_tested", description: "An agent tool fetched six fictional listings. It also reproduced the rules scores. This does not prove that AI makes better matches." },
-    { title: "AI and hub connection", status: "planned", description: "The site still needs direct AI calls, AI ranking, full WordPress fields and approved hub posting." },
+    { title: "AI ranking and hub connection", status: "planned", description: "Profile drafting uses AI. Opportunity scores still use rules. AI ranking, full WordPress fields and approved hub posting remain to be built and tested." },
   ],
   approach: [
     { title: "Parser", description: "Read file text and explicit fields. Keep this step even if AI handles the next step." },
@@ -24,15 +24,15 @@ export const project = {
   ],
   architecture: [
     { title: "Browser and parser", description: "Read text, edit fields, show match reasons and collect reviews." },
-    { title: "Backend — proposed", description: "Check requests and data access. Keep service keys on the server, outside the public site." },
-    { title: "AI service — to confirm", description: "Draft and rank approved data. Agree on the service, API, limits and owner." },
+    { title: "Drafting server", description: "Check source text and model replies. Keep the service key on the server, outside the public site. The demo does not require a login." },
+    { title: "PatriotAI model API", description: "GPT-4o drafts profile fields from text. A live test passed on November 17. Confirm real-data use and long-term ownership before a pilot." },
     { title: "WordPress and reviewers", description: "Read full records and ACF fields. Use the hub’s categories. Keep posting rights with approved people." },
   ],
   patriot: {
     testedDirection: "PatriotAI agent → public fictional catalog: tested read-only GET.",
-    pendingDirection: "Website → PatriotAI agent: no approved API or sign-in flow is set up here.",
-    access: "Mason users can create personal agents. Official agents need Agent Admin access and offer more tools, including API links. This does not prove that a website can call an agent.",
-    request: "Ask Mason ITS for the API, sign-in method, allowed website, data rules, limits and support. Ask about an official Connect onAir Assistant. The professor can support the request; ITS must confirm access.",
+    pendingDirection: "Website → drafting server → PatriotAI GPT-4o model: connected for profile drafts. This calls the model API, not the saved personal agent.",
+    access: "The capstone demo needs no owner login. The API key stays on the server. Drafting sends only the source text you choose; model replies still need review.",
+    request: "Before real use, confirm allowed data, consent, API ownership, key rotation, support and budget with Mason ITS and the sponsor. Live profile drafting does not prove match quality or WordPress integration.",
     helpUrl: "https://gmu.teamdynamix.com/TDClient/33/Portal/Requests/ServiceOffering/149/PatriotAI",
   },
   curation: [
@@ -52,7 +52,7 @@ export const project = {
   decisions: [
     { question: "What must the first pilot deliver?", owner: "Sponsor and team", detail: "Agree on matching first, the needed profile and post tools, pilot users, content, limits and who signs off." },
     { question: "How do we read full hub records?", owner: "onAir technical mentors", detail: "Confirm the test site, WordPress API, ACF fields, categories and access. Review which parts of Sai’s matching work we can reuse." },
-    { question: "Which AI connection can the website use?", owner: "Mason ITS and onAir technical mentors", detail: "Check whether PatriotAI allows website calls, or choose an approved service. Agree on sign-in, limits, hosting and the backend owner." },
+    { question: "Who will own the AI connection for the pilot?", owner: "Mason ITS and onAir technical mentors", detail: "The demo calls the PatriotAI model API. Confirm allowed data, hosting, key rotation, limits and the long-term service owner." },
     { question: "What data may leave the hub?", owner: "Sponsor and data owners", detail: "Agree on consent, allowed data, storage time and access before using real records. Mason’s FAQ describes outside search and some outside model calls." },
     { question: "Who reviews and publishes?", owner: "Sponsor and curators", detail: "Name who checks facts, fixes errors and approves posts. Agree on posting rights and review records." },
     { question: "How will we judge match quality?", owner: "Sponsor reviewers and team", detail: "Agree on labels, test data, task times, speed and budget. Set a clear test for when AI beats the rules." },
@@ -68,7 +68,7 @@ export const project = {
   sources: [
     { title: "Team 4 assignments A2–A12 and final presentation", detail: "Project planning, process evidence, scope, alternatives, quality, risk, product and proposed development schedule; reviewed November 10, 2026. Internal course material is not included in this public repository." },
     { title: "Sponsor coordination and scope review", detail: "P2 AI-first direction, shared P1/P3 drafting, full-field retrieval and human review; reviewed November 10, 2026. This brief summarizes the project direction rather than reproducing confidential sponsor material." },
-    { title: "Prototype and separate agent experiments", detail: "Team tests on November 10, 2026: six fictional listings, source-checked manual profile import and read-only catalog retrieval. Production integration and AI quality remain unproven.", url: "https://github.com/marcusdiccox/connect-onair-demo" },
+    { title: "Prototype and API tests", detail: "November 17, 2026: a live PatriotAI model call returned a source-checked fictional profile. The site keeps its parser, rules matching and human review. Production integration and AI match quality remain unproven.", url: "https://github.com/marcusdiccox/connect-onair-demo" },
     { title: "Mason ITS: PatriotAI FAQs", detail: "Agent privileges, API integration capabilities and data handling guidance; checked November 10, 2026.", url: "https://its.gmu.edu/knowledge-base/patriotai-faqs/" },
   ],
 };

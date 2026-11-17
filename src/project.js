@@ -58,7 +58,7 @@ export function renderProject(container) {
   scope.append(rows(project.processes));
   container.append(scope);
 
-  const status = section("project-status", "What works today", "The website and the separate PatriotAI tests show different parts of the plan.");
+  const status = section("project-status", "What works today", "The demo uses AI for profile drafts and rules for opportunity scores. Hub publishing is still planned.");
   const grid = element("div", "project-capabilities");
   const labels = { working: "Working in this website", separately_tested: "Tested separately", planned: "Planned integration" };
   for (const item of project.capabilities) {

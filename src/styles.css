@@ -1518,3 +1518,14 @@ dialog::backdrop {
     padding-bottom: 30px;
   }
 }
+:root .source-preview {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 220px;
+  overflow: auto;
+  font: inherit;
+  font-size: 0.875rem;
+  padding: 1rem;
+  background: var(--background, #f6f8f7);
+  border-radius: 10px;
+}

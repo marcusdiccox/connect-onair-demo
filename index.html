@@ -599,49 +599,23 @@
       </div>
       <div class="dialog-body">
         <p>
-          Use your Mason account to draft from this source. Nothing is sent
-          automatically. Bring the JSON response back here to check and apply
-          it.
+          Generate a profile here, then check its facts and source quotes.
+          Your profile stays editable.
         </p>
-        <ol class="assistant-steps">
-          <li>
-            Copy the prompt below and
-            <a
-              href="https://patriotai.gmu.edu/chat/051ca4a1-508a-41a8-af45-7980efab18e2?new-chat=true"
-              target="_blank"
-              rel="noopener noreferrer"
-              >open Connect onAir Assistant</a
-            >.
-          </li>
-          <li>Paste it into a new chat and copy the JSON reply.</li>
-          <li>
-            Preview the reply here, check its source quotes, and apply it.
-          </li>
-        </ol>
-        <label for="patriot-prompt">Profile drafting prompt</label
-        ><textarea id="patriot-prompt" rows="4" readonly></textarea>
-        <button
-          class="button secondary assistant-button"
-          id="copy-patriot-prompt"
-          type="button"
-        >
-          Copy prompt
-        </button>
-        <label for="patriot-response">PatriotAI JSON response</label
-        ><textarea
-          id="patriot-response"
-          rows="7"
-          maxlength="100000"
-          placeholder='{"name":"...","education":"...","experience":"...","skills":[],"interests":[],"evidence":[]}'
-        ></textarea>
-        <p class="form-error" id="patriot-error" role="alert" hidden></p>
+        <p class="field-help">When you select Generate, this source text goes through our server to Mason's PatriotAI model service. Use a demo resume or text you have permission to share. You do not need to leave this page or sign in to Mason here.</p>
+        <details class="assistant-button">
+          <summary id="patriot-source-summary">Source text</summary>
+          <pre id="patriot-source-preview" class="source-preview"></pre>
+        </details>
         <button
           class="button primary assistant-button"
-          id="preview-patriot"
+          id="generate-patriot"
           type="button"
         >
-          Preview draft
+          Generate profile draft
         </button>
+        <p id="patriot-status" class="field-help" role="status" aria-live="polite"></p>
+        <p class="form-error" id="patriot-error" role="alert" hidden></p>
         <section id="patriot-preview" hidden aria-label="Proposed profile">
           <div id="patriot-preview-fields"></div>
           <label class="check-label"
@@ -655,17 +629,7 @@
         <details class="field-help assistant-button">
           <summary>About this connection</summary>
           <p>
-            The assistant currently requires its owner's Mason account. You can
-            also use the prompt in
-            <a href="https://patriotai.gmu.edu/chat/onechat" target="_blank" rel="noopener noreferrer">your own PatriotAI chat</a>.
-            The agent can retrieve our fictional opportunity catalog. Profile
-            drafts still need this manual transfer and review before use.
-            <a
-              href="https://its.gmu.edu/ai-toolkit/"
-              target="_blank"
-              rel="noopener noreferrer"
-              >Mason's integration guidance</a
-            >
+            This demo calls the PatriotAI GPT-4o model API. Our server checks source quotes and skills before showing a draft. These checks can miss errors, so you must review the result. Drafts do not publish to WordPress. The local parser and rules-based matching still work if AI is unavailable.
           </p>
         </details>
       </div>
