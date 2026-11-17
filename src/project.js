@@ -73,7 +73,7 @@ export function renderProject(container) {
   approach.append(rows(project.approach));
   container.append(approach);
 
-  const integration = section("project-integration", "The connection still needed", project.patriot.testedDirection);
+  const integration = section("project-integration", "How the AI connection works", project.patriot.testedDirection);
   integration.append(element("p", "project-direction", project.patriot.pendingDirection));
   integration.append(rows(project.architecture));
   const access = element("details", "project-detail");
