@@ -2,7 +2,7 @@
   "version": 1,
   "kind": "capstone-project-brief",
   "name": "Connect onAir",
-  "updated": "2026-11-17",
+  "updated": "2026-11-18",
   "goal": "Help GMU IST students and faculty find useful opportunities through checked profiles, clear matches and reviewed posts.",
   "pilot": "First pilot: the GMU IST hub, with students, faculty, advisers, businesses and curators.",
   "direction": "Start with opportunity matching. Reuse one draft helper for profiles and posts. People check facts and approve posts.",
@@ -28,7 +28,7 @@
     {
       "title": "Resume and listing intake",
       "status": "working",
-      "description": "Read PDF, DOCX and TXT files. Edit profile fields, draft listings and fill missing details."
+      "description": "Read common documents, text files and spreadsheets. Use PatriotAI for pictures and scanned PDFs, then check and edit the extracted text. Files can be up to 10 MB; AI reads up to 10 pages."
     },
     {
       "title": "Rules-based matching",
@@ -43,7 +43,7 @@
     {
       "title": "PatriotAI profile drafts",
       "status": "working",
-      "description": "Generate a draft in this website through the PatriotAI model API. Check its fields and source quotes, then apply it. You do not need to copy a prompt or leave the page."
+      "description": "Generate a draft in this website through the PatriotAI model API. Source references create exact quotes. Unsupported fields stay blank with a warning; valid fields remain available for review."
     },
     {
       "title": "Agent reads the demo catalog",

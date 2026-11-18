@@ -104,10 +104,12 @@
                 ><input
                   type="file"
                   id="resume-file"
-                  accept=".pdf,.docx,.txt"
-                /><small>PDF, DOCX, or TXT · up to 10 MB</small>
+                  accept=".pdf,.docx,.txt,.md,.csv,.json,.html,.htm,.rtf,.odt,.pptx,.xlsx,.png,.jpg,.jpeg,.webp,.gif,.bmp"
+                /><small>Documents, text, or pictures · up to 10 MB</small>
+                <details class="field-help"><summary>Supported files</summary><p>PDF, DOCX, ODT, RTF, PPTX, XLSX, TXT, Markdown, CSV, JSON and HTML. Pictures: JPG, PNG, WebP, GIF and BMP. AI can read scans and pictures after you choose Read with PatriotAI. Up to 10 pages per AI read. For other formats, save as PDF or JPG first.</p></details>
                 <p id="file-status" role="status"></p>
               </div>
+              <label class="button secondary assistant-button" for="vision-file">Read a scan or picture with AI</label><input type="file" id="vision-file" class="visually-hidden" accept=".pdf,.docx,.png,.jpg,.jpeg,.webp,.gif,.bmp" />
               <div class="source-divider"><span>OR ADD TEXT</span></div>
               <label for="source-text">Resume or profile text</label
               ><textarea
@@ -117,7 +119,7 @@
                 placeholder="Paste your resume, or describe your skills, education, and experience."
               ></textarea>
               <div class="field-meta">
-                <span>Processed on this device.</span
+                <span>Local parsing. AI reading is optional.</span
                 ><span id="character-count">0 / 50,000</span>
               </div>
               <label for="source-url"
@@ -585,6 +587,23 @@
         </div>
       </form>
     </dialog>
+    <dialog id="document-dialog" aria-labelledby="document-heading">
+      <div class="dialog-header"><h2 id="document-heading">Read a scan or picture</h2><button class="icon-button" data-close="document-dialog" aria-label="Close document reader" type="button">×</button></div>
+      <div class="dialog-body">
+        <p id="document-file-name"></p>
+        <p>This file needs image reading. Select Read to send its page images through our server to PatriotAI. Use a document you have permission to share.</p>
+        <p class="field-help">Up to 10 pages. Check the text before using it. AI can misread names, numbers and small print. Using the result replaces the source text, while your profile stays unchanged.</p>
+        <button class="button primary" id="read-document-ai" type="button">Read with PatriotAI</button>
+        <p id="document-status" class="field-help" role="status" aria-live="polite"></p>
+        <p id="document-error" class="form-error" role="alert" hidden></p>
+        <section id="document-preview" hidden>
+          <label for="document-text">Check and edit the extracted text</label><textarea id="document-text" rows="12" maxlength="50000"></textarea>
+          <p id="document-notes" class="field-help"></p>
+          <label class="check-label"><input id="document-reviewed" type="checkbox"/><span>I checked this text against my document.</span></label>
+          <button class="button primary full" id="use-document-text" type="button">Use reviewed text</button>
+        </section>
+      </div>
+    </dialog>
     <dialog id="patriot-dialog" aria-labelledby="patriot-heading">
       <div class="dialog-header">
         <div><h2 id="patriot-heading">Draft with PatriotAI</h2></div>
@@ -617,6 +636,7 @@
         <p id="patriot-status" class="field-help" role="status" aria-live="polite"></p>
         <p class="form-error" id="patriot-error" role="alert" hidden></p>
         <section id="patriot-preview" hidden aria-label="Proposed profile">
+          <ul id="patriot-warnings" class="field-help"></ul>
           <div id="patriot-preview-fields"></div>
           <label class="check-label"
             ><input type="checkbox" id="patriot-reviewed" /><span

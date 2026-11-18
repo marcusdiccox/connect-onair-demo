@@ -18,8 +18,9 @@ import {
   validateState,
   STORAGE_KEY,
 } from "./storage.js";
-import { extractDocument } from "./files.js";
-import { requestProfileDraft } from "./patriot-client.js";
+import { extractDocument, needsVision, prepareDocumentImages } from "./files.js";
+import { DOCUMENT_ACCEPT } from "./document-types.js";
+import { requestProfileDraft, requestDocumentText } from "./patriot-client.js";
 import {
   buildProfilePrompt,
   parseProfileResponse,
@@ -42,6 +43,9 @@ let pendingConfirmation;
 let proposedProfile;
 let patriotSource;
 let patriotRequest;
+let documentFile;
+let documentApply;
+let documentRequest;
 const filters = { query: "", type: "", category: "" };
 
 function node(tag, className = "", text = "") {
@@ -266,6 +270,17 @@ async function upload(file) {
       );
     } else apply();
   } catch (error) {
+    if (needsVision(file, error)) {
+      $("#file-status").textContent = `${file.name} needs image reading.`;
+      openDocumentReader(file, text => {
+        state.draft.text = text;
+        state.draft.fileName = file.name;
+        fillSources();
+        persist();
+        toast("Reviewed text loaded. Build your profile or draft with PatriotAI.");
+      });
+      return;
+    }
     $("#file-status").textContent = state.draft.fileName
       ? `Previous source: ${state.draft.fileName}`
       : "Document could not be read.";
@@ -1058,6 +1073,7 @@ $("#patriot-button").addEventListener("click", () => {
     $("#patriot-source-preview").textContent = patriotSource.text;
     $("#patriot-preview").hidden = true;
     $("#patriot-reviewed").checked = false;
+    $("#patriot-warnings").replaceChildren();
     proposedProfile = undefined;
     errorAt("#patriot-error");
     $("#patriot-dialog").showModal();
@@ -1085,7 +1101,8 @@ $("#generate-patriot").addEventListener("click", async () => {
   $("#patriot-reviewed").checked = false;
   errorAt("#patriot-error");
   try {
-    const draft = await requestProfileDraft(patriotSource.text, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(30000)]) });
+    let warnings = [];
+    const draft = await requestProfileDraft(patriotSource.text, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(35000)]), onWarnings: value => { warnings = value; } });
     if (patriotRequest !== controller || !$("#patriot-dialog").open) return;
     const result = parseProfileResponse(
       JSON.stringify(draft),
@@ -1115,6 +1132,7 @@ $("#generate-patriot").addEventListener("click", async () => {
       preview.append(section);
     }
     $("#patriot-preview").hidden = false;
+    $("#patriot-warnings").replaceChildren(...warnings.map(warning => node("li", "", warning)));
     $("#patriot-reviewed").checked = false;
     $("#patriot-status").textContent = "Draft ready. Check each field and its source quote before applying it.";
     errorAt("#patriot-error");
@@ -1216,6 +1234,15 @@ $("#listing-file").addEventListener("change", async (event) => {
     else apply();
     errorAt("#opportunity-error");
   } catch (error) {
+    if (needsVision(file, error)) {
+      $("#listing-file-status").textContent = `${file.name} needs image reading.`;
+      openDocumentReader(file, text => {
+        $("#listing-source").value = text;
+        $("#listing-file-status").textContent = `AI-read text from ${file.name}. Check it before creating a listing.`;
+        errorAt("#opportunity-error");
+      });
+      return;
+    }
     errorAt("#opportunity-error", error.message);
     $("#listing-file-status").textContent =
       "Document could not be read. Paste the text instead.";
@@ -1225,6 +1252,84 @@ $("#listing-file").addEventListener("change", async (event) => {
     });
     event.target.value = "";
   }
+});
+
+function openDocumentReader(file, apply) {
+  documentFile = file;
+  documentApply = apply;
+  $("#document-file-name").textContent = file.name;
+  $("#document-text").value = "";
+  $("#document-notes").textContent = "";
+  $("#document-preview").hidden = true;
+  $("#document-reviewed").checked = false;
+  $("#document-status").textContent = "";
+  errorAt("#document-error");
+  $("#document-dialog").showModal();
+}
+
+$("#document-dialog").addEventListener("close", () => {
+  documentRequest?.abort();
+  documentRequest = undefined;
+  documentFile = undefined;
+  documentApply = undefined;
+  $("#read-document-ai").disabled = false;
+  $("#read-document-ai").textContent = "Read with PatriotAI";
+});
+$("#document-text").addEventListener("input", () => { $("#document-reviewed").checked = false; });
+$("#read-document-ai").addEventListener("click", async () => {
+  if (documentRequest || !documentFile) return;
+  const controller = new AbortController();
+  documentRequest = controller;
+  $("#read-document-ai").disabled = true;
+  $("#read-document-ai").textContent = "Reading…";
+  $("#document-status").textContent = "Preparing document images on this device…";
+  $("#document-preview").hidden = true;
+  errorAt("#document-error");
+  try {
+    const { images, pageCount } = await prepareDocumentImages(documentFile);
+    if (documentRequest !== controller || controller.signal.aborted) return;
+    $("#document-status").textContent = `PatriotAI is reading ${pageCount} ${pageCount === 1 ? "page" : "pages"}…`;
+    const result = await requestDocumentText(images, { signal: AbortSignal.any([controller.signal, AbortSignal.timeout(65000)]) });
+    if (documentRequest !== controller || !$("#document-dialog").open) return;
+    $("#document-text").value = result.text;
+    $("#document-notes").textContent = result.notes.join(" ");
+    $("#document-preview").hidden = false;
+    $("#document-reviewed").checked = false;
+    $("#document-status").textContent = "Text ready. Compare it with your document and correct any reading errors.";
+  } catch (error) {
+    if (documentRequest !== controller || controller.signal.aborted) return;
+    $("#document-status").textContent = "";
+    errorAt("#document-error", error.name === "TimeoutError" ? "Reading took too long. Try fewer pages or a smaller image." : error.message);
+  } finally {
+    if (documentRequest === controller) {
+      documentRequest = undefined;
+      $("#read-document-ai").disabled = false;
+      $("#read-document-ai").textContent = "Read with PatriotAI";
+    }
+  }
+});
+$("#use-document-text").addEventListener("click", () => {
+  const text = $("#document-text").value.trim();
+  if (!text || !$("#document-reviewed").checked) {
+    errorAt("#document-error", "Check the extracted text against your document, then tick the review box.");
+    return;
+  }
+  const apply = documentApply;
+  $("#document-dialog").close();
+  apply?.(text);
+});
+$("#resume-file").accept = DOCUMENT_ACCEPT;
+$("#listing-file").accept = DOCUMENT_ACCEPT;
+$("#vision-file").addEventListener("change", event => {
+  const file = event.target.files[0];
+  if (file) openDocumentReader(file, text => {
+    state.draft.text = text;
+    state.draft.fileName = file.name;
+    fillSources();
+    persist();
+    toast("Reviewed text loaded. Build your profile or draft with PatriotAI.");
+  });
+  event.target.value = "";
 });
 
 fillSources();

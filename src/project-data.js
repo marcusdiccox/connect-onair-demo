@@ -1,6 +1,6 @@
 export const project = {
   name: "Connect onAir",
-  updated: "2026-11-17",
+  updated: "2026-11-18",
   goal: "Help GMU IST students and faculty find useful opportunities through checked profiles, clear matches and reviewed posts.",
   pilot: "First pilot: the GMU IST hub, with students, faculty, advisers, businesses and curators.",
   direction: "Start with opportunity matching. Reuse one draft helper for profiles and posts. People check facts and approve posts.",
@@ -10,10 +10,10 @@ export const project = {
     { id: "P3", title: "Post drafting and review", description: "Draft posts from business source text. The business checks facts. A curator approves each hub post." },
   ],
   capabilities: [
-    { title: "Resume and listing intake", status: "working", description: "Read PDF, DOCX and TXT files. Edit profile fields, draft listings and fill missing details." },
+    { title: "Resume and listing intake", status: "working", description: "Read common documents, text files and spreadsheets. Use PatriotAI for pictures and scanned PDFs, then check and edit the extracted text. Files can be up to 10 MB; AI reads up to 10 pages." },
     { title: "Rules-based matching", status: "working", description: "Scores use required skills (70%), preferred skills (20%) and interests (10%). Empty groups share their weight. Scores show skill coverage, not the chance of a job offer." },
     { title: "Review and backup", status: "working", description: "Save review records in this browser. Export or restore a JSON backup. This does not create a shared account or publish to WordPress." },
-    { title: "PatriotAI profile drafts", status: "working", description: "Generate a draft in this website through the PatriotAI model API. Check its fields and source quotes, then apply it. You do not need to copy a prompt or leave the page." },
+    { title: "PatriotAI profile drafts", status: "working", description: "Generate a draft in this website through the PatriotAI model API. Source references create exact quotes. Unsupported fields stay blank with a warning; valid fields remain available for review." },
     { title: "Agent reads the demo catalog", status: "separately_tested", description: "An agent tool fetched six fictional listings. It also reproduced the rules scores. This does not prove that AI makes better matches." },
     { title: "AI ranking and hub connection", status: "planned", description: "Profile drafting uses AI. Opportunity scores still use rules. AI ranking, full WordPress fields and approved hub posting remain to be built and tested." },
   ],
