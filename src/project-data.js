@@ -59,11 +59,13 @@ export const project = {
     { question: "Who keeps the system running?", owner: "Sponsor and technical owner", detail: "Name the owner for hosting, checks, backup, restore, guides and training. Agree on who handles faults." },
   ],
   roadmap: [
-    { phase: "Preparation", dates: "Jan 4–8, 2027", deliverable: "Confirm scope, access, requirements and prototype gaps." },
-    { phase: "Assistant and matching", dates: "Jan 11–Feb 26, 2027", deliverable: "Develop reviewed drafts, ranking and explanations; compare with the baseline." },
-    { phase: "Integration and testing", dates: "Mar 1–Apr 9, 2027", deliverable: "Connect the development hub; run alpha testing, corrections and user acceptance." },
-    { phase: "Deployment", dates: "Apr 12–23, 2027", deliverable: "Release only after agreed tests; verify monitoring and operating controls." },
-    { phase: "Turnover", dates: "By Apr 30, 2027", deliverable: "Deliver documentation, training, recovery instructions and sponsor handoff." },
+    { phase: "Preparation", dates: "Nov 18–Dec 11, 2026", deliverable: "Marcus and Jayce confirm scope, approved access, field routes and labeled data. Confirm winter-break work capacity." },
+    { phase: "Profile assistant", dates: "Dec 14, 2026–Jan 8, 2027", deliverable: "Khizer and Zain finish editable fields, source checks and reviewed drafts." },
+    { phase: "Discovery and matching", dates: "Jan 4–22, 2027", deliverable: "Anthony and Marcus build ranking and reasons, then compare AI with rules on ten profiles and forty listings." },
+    { phase: "Opportunity posting", dates: "Jan 4–22, 2027", deliverable: "Mahnoor and Jayce build source-backed drafts and test business and curator approval. This work runs alongside matching." },
+    { phase: "Integration and testing", dates: "Jan 25–Feb 12, 2027", deliverable: "The whole team tests connected hub flows, failed calls, permissions and recovery." },
+    { phase: "Fixes and acceptance", dates: "Feb 15–26, 2027", deliverable: "Anthony and the team close defects and seek sponsor acceptance against the agreed pilot targets." },
+    { phase: "Release and handoff", dates: "Mar 1–5, 2027", deliverable: "Zain and the team release the product and complete training, operating guides and recovery handoff. March 5 is the planning target for an early March final product, pending the exact course cutoff." },
   ],
   sources: [
     { title: "Team 4 assignments A2–A12 and final presentation", detail: "Project planning, process evidence, scope, alternatives, quality, risk, product and proposed development schedule; reviewed November 10, 2026. Internal course material is not included in this public repository." },
