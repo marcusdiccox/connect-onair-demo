@@ -32,9 +32,41 @@ test("rejects other origins, oversized or empty sources before spending tokens",
   }
 });
 
-test("rejects invented model skills and source quotes", async () => {
-  assert.equal((await handleRequest(request({ source }), env, upstream({ ...draft, skills: ["React"] }))).status, 422);
+test("unsupported claims are left out without discarding valid fields", async () => {
+  const response = await handleRequest(request({ source }), env, upstream({ ...draft, skills: ["React"] }));
+  assert.equal(response.status, 200);
+  const result = await response.json();
+  assert.deepEqual(result.draft.skills, []);
+  assert.equal(result.draft.name, "Jordan Example");
+  assert.ok(result.warnings.length);
   assert.equal((await handleRequest(request({ source }), env, upstream({ ...draft, evidence: [{ field: "name", quote: "Made up source" }] }))).status, 422);
+});
+
+const image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jGZkAAAAASUVORK5CYII=";
+const imageRequest = body => new Request("https://api.example/api/read-document", { method: "POST", headers: { Origin: origin, "Content-Type": "application/json" }, body: JSON.stringify(body) });
+
+test("vision reads uploaded pages as data and returns text for review", async () => {
+  const response = await handleRequest(imageRequest({ images: [image] }), env, async (url, init) => {
+    const body = JSON.parse(init.body);
+    assert.equal(body.messages[1].content[1].type, "image_url");
+    assert.equal(body.messages[1].content[1].image_url.url, image);
+    return upstream({ text: "Jordan Example\nSkills: Python, SQL", notes: [] })();
+  });
+  assert.equal(response.status, 200);
+  assert.match((await response.json()).text, /Python/);
+});
+
+test("vision rejects URLs, invalid images and too many pages without calling upstream", async () => {
+  const noCall = () => { throw new Error("must not call model"); };
+  for (const images of [[], ["https://example.com/private"], ["data:image/png;base64,aGVsbG8="], Array(11).fill(image)]) {
+    assert.equal((await handleRequest(imageRequest({ images }), env, noCall)).status, 400);
+  }
+});
+
+test("vision reports unreadable or cut-off text instead of silently losing pages", async () => {
+  assert.equal((await handleRequest(imageRequest({ images: [image] }), env, upstream({ text: "", notes: [] }))).status, 422);
+  const cut = async () => Response.json({ choices: [{ finish_reason: "length", message: { content: '{"text":"cut' } }] });
+  assert.equal((await handleRequest(imageRequest({ images: [image] }), env, cut)).status, 422);
 });
 
 test("handles upstream limits, missing setup and malformed data without leaking errors", async () => {
